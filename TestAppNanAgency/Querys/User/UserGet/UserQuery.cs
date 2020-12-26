@@ -36,5 +36,6 @@ namespace App.WebApi.Comands.UserGet
                 return user;
             }
         }
+
     }
 }

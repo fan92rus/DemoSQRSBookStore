@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Storage;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,15 @@ namespace TestAppNanAgency
             services.AddDbContext<AppContext>();//(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppContext>().AddRoles<IdentityRole>();
             services.AddControllers();
+
+            var mapperConfig = new MapperConfiguration(expression =>
+            {
+            });
+            
+            IMapper mapper = mapperConfig.CreateMapper();
+
+            services.AddSingleton(mapper);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo()

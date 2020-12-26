@@ -7,6 +7,7 @@ using App.Models.User;
 using App.WebApi.Comands.UserGet;
 using App.WebApi.Comands.UserLogin;
 using App.WebApi.Features.CreateUser;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace App.WebApi.Controllers
     public class UserController : ControllerBase
     {
         public IMediator Mediator { get; }
+        public IMapper Mapper { get; }
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, IMapper mapper)
         {
             Mediator = mediator;
+            Mapper = mapper;
         }
 
 
@@ -35,11 +38,7 @@ namespace App.WebApi.Controllers
         public async Task<UserDashboardModel> GetUser()
         {
             var user = await Mediator.Send(new UserQuery.Command(this.HttpContext.User));
-            return new UserDashboardModel()
-            {
-                Rating = user.Rating,
-                UserName = user.Name
-            };
+            return Mapper.Map<UserDashboardModel>(user);
         }
     }
 }

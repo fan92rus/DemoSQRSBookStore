@@ -6,7 +6,7 @@ namespace App.Models.User
 {
     public class UserDashboardModel
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
         public int Rating { get; set; }
     }
 }
