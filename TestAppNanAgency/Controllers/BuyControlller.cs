@@ -26,8 +26,8 @@ namespace App.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("buy")]
-        public async Task<Operation> Buy(int id)
+        [HttpGet()]
+        public async Task<Operation> Buy([FromQuery]int id)
         {
             var book = await Mediator.Send(new BookGet.Command(id));
             var user = await Mediator.Send(new UserQuery.Command(this.HttpContext.User));

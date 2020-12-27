@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Models;
+using App.Models.Pagination;
 using App.WebApi.Comands.Books.BookCreate;
 using App.WebApi.Comands.Books.BookDelete;
 using App.WebApi.Comands.Books.BookEdit;
@@ -31,14 +32,13 @@ namespace App.WebApi.Controllers
         [HttpGet("Get")]
         public async Task<Operation<Book>> Get(int id) => await Mediator.Send(new BookGet.Command(id));
 
-        
         /// <summary>
         /// Возвращает книги с пагинацией
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpGet("GetAll")]
-        public async Task<Operation<IEnumerable<Book>>> GetAll(BooksGet.Query query) => await Mediator.Send(query);
+        [HttpPost("GetAll")]
+        public async Task<Operation<Page<Book>>> GetAll(BooksGet.Query query) => await Mediator.Send(query);
 
         [Authorize(Roles = "Manager")]
         [HttpPost("Add")]
@@ -46,7 +46,7 @@ namespace App.WebApi.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpDelete("Delete")]
-        public async Task<Operation> Remove(BookDelete.Command command) => await Mediator.Send(command);
+        public async Task<Operation> Delete([FromQuery]BookDelete.Command command) => await Mediator.Send(command);
 
         [Authorize(Roles = "Manager")]
         [HttpPatch("Edit")]

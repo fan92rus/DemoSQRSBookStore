@@ -26,6 +26,7 @@ namespace App.WebApi.Comands.Books.BookCreate
                     Price = request.Price,
                     Title = request.Title
                 });
+
                 return new Operation<int>(true, "", result);
             }
 

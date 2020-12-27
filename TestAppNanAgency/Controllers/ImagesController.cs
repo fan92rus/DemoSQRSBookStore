@@ -25,21 +25,20 @@ namespace App.WebApi.Controllers
         private IMediator Mediator { get; }
         
         [Authorize(Roles = "Manager")]
-        [HttpPost("add")]
+        [HttpPost("Add")]
         public async Task<Operation<int>> Add(ImageAdd.Command command) => await Mediator.Send(command);
 
-
         [Authorize(Roles = "Manager")]
-        [HttpPost("remove")]
+        [HttpDelete("Remove")]
         public async Task<Operation> Remove(ImageRemove.Command command) => await Mediator.Send(command);
 
-        [HttpPost("get")] 
+        [HttpGet("Get")] 
         public async Task<Operation<Image>> Get(ImageGet.Query query) => await Mediator.Send(query);
 
-        [HttpPost("getByIds")]
+        [HttpPost("GetByIds")]
         public async Task<Operation<IEnumerable<Image>>> Get(ImagesGetbyIds.Query query) => await Mediator.Send(query);
 
-        [HttpPost("getMany")]
-        public async Task<Operation<IEnumerable<Image>>> Get(ImagesGet.Query query) => await Mediator.Send(query);
+        [HttpGet("GetMany")]
+        public async Task<Operation<IEnumerable<Image>>> Get([FromQuery]ImagesGet.Query query) => await Mediator.Send(query);
     }
 }

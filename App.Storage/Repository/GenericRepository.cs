@@ -20,10 +20,10 @@ namespace App.Storage.Repository
 
     public class GenericRepository<T> : IGenericRepository<T> where T : Entity
     {
-        private DbContext Context { get; }
+        private AppContext Context { get; }
         private DbSet<T> Collection { get; }
 
-        public GenericRepository(DbContext store)
+        public GenericRepository(AppContext store)
         {
             this.Collection = store.Set<T>();
             this.Context = store;

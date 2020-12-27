@@ -10,7 +10,10 @@ namespace App.Models
         {
             this.Value = value;
         }
-
+        public Operation(bool success, IEnumerable<string> errors, T value) : base(success, errors)
+        {
+            this.Value = value;
+        }
 
         public T Value { get; set; }
     }

@@ -36,6 +36,7 @@ namespace TestAppNanAgency
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             var asembly = typeof(Startup).Assembly;
             services.AddMediatR(asembly);
 
@@ -43,7 +44,6 @@ namespace TestAppNanAgency
             services.AddDbContext<AppContext>();//(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppContext>().AddRoles<IdentityRole>();
             services.AddControllers();
-            services.AddScoped<DbContext, AppContext>();
             services.AddScoped<GenericRepository<Image>>();
             services.AddScoped<GenericRepository<Book>>();
 
@@ -63,10 +63,13 @@ namespace TestAppNanAgency
                 });
                 c.CustomSchemaIds(type =>
                 {
-                    if (type.FullName.EndsWith("+Query") || type.FullName.EndsWith("+Query"))
+                    string ReplaceCommandName(Type type, string Target)
                     {
+                        if (!type.FullName.EndsWith($"+{Target}") && !type.FullName.EndsWith($"+{Target}")) return type.Name;
                         var parentTypeName = type.FullName.Substring(type.FullName.LastIndexOf(".", StringComparison.Ordinal) + 1);
-                        return parentTypeName.Replace("+Query", "Query").Replace("+Query", "Query");
+                        {
+                            return parentTypeName.Replace($"+{Target}", Target).Replace($"+{Target}", Target);
+                        }
                     }
 
                     string GenGenericName(Type type)
@@ -76,9 +79,14 @@ namespace TestAppNanAgency
                         {
                             return type.Name + $"<{string.Join(',', type.GenericTypeArguments.Select(GenGenericName))}>";
                         }
-                        return type.Name;
+
+                        var change = "Query";
+                        if (type.Name.Contains("Command"))
+                            change = "Command";
+
+                        return ReplaceCommandName(type, change);
                     }
-                    
+
                     return GenGenericName(type);
                 });
             });

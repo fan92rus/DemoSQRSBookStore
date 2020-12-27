@@ -28,13 +28,13 @@ namespace App.WebApi.Controllers
         }
 
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<Operation> Register(UserCreate.Command command) => await Mediator.Send(command);
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<bool> Login(UserLogin.Command command) => await Mediator.Send(command);
 
-        [HttpGet("get")]
+        [HttpGet("Get")]
         public async Task<UserDashboardModel> GetUser()
         {
             var user = await Mediator.Send(new UserQuery.Command(this.HttpContext.User));
