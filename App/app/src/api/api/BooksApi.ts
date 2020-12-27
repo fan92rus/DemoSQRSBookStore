@@ -22,7 +22,7 @@ export class BooksApi {
     }
 
     public async Edit(model: BookEditRequest) {
-        return (await axios.post<SimpleOperation>("/api/Book/Edit", model));
+        return (await axios.patch<SimpleOperation>("/api/Book/Edit", model));
     }
 
     public async Delete(id: number) {
