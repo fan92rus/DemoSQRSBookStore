@@ -28,22 +28,28 @@ namespace App.WebApi.Controllers
             Mediator = mediator;
         }
 
-        [HttpGet("get")]
+        [HttpGet("Get")]
         public async Task<Operation<Book>> Get(int id) => await Mediator.Send(new BookGet.Command(id));
 
-        [HttpGet("getAll")]
-        public async Task<Operation<IEnumerable<Book>>> GetAll() => await Mediator.Send(new BooksGet.Command());
+        
+        /// <summary>
+        /// Возвращает книги с пагинацией
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("GetAll")]
+        public async Task<Operation<IEnumerable<Book>>> GetAll(BooksGet.Query query) => await Mediator.Send(query);
 
         [Authorize(Roles = "Manager")]
-        [HttpPost("add")]
+        [HttpPost("Add")]
         public async Task<Operation<int>> Add(BookCreate.Command command) => await Mediator.Send(command);
-        
+
         [Authorize(Roles = "Manager")]
-        [HttpPost("remove")]
+        [HttpDelete("Delete")]
         public async Task<Operation> Remove(BookDelete.Command command) => await Mediator.Send(command);
 
         [Authorize(Roles = "Manager")]
-        [HttpPost("edit")]
+        [HttpPatch("Edit")]
         public async Task<Operation> Edit(BookEdit.Command command) => await Mediator.Send(command);
     }
 }

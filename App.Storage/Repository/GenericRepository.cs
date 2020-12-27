@@ -20,10 +20,10 @@ namespace App.Storage.Repository
 
     public class GenericRepository<T> : IGenericRepository<T> where T : Entity
     {
-        private AppContext Context { get; }
+        private DbContext Context { get; }
         private DbSet<T> Collection { get; }
 
-        public GenericRepository(AppContext store)
+        public GenericRepository(DbContext store)
         {
             this.Collection = store.Set<T>();
             this.Context = store;
@@ -62,8 +62,9 @@ namespace App.Storage.Repository
         }
         public IEnumerable<T> Get(Func<T, bool> predicate)
         {
-            return Collection.AsNoTracking().Where(predicate).ToList();
+            return Collection.AsNoTracking().Where(predicate);
         }
+        
         public T GetById(int id) => Collection.FirstOrDefault(x => x.Id == id);
     }
 }

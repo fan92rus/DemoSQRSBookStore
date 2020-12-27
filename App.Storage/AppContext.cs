@@ -12,5 +12,6 @@ namespace App.Storage
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=booksDB;Username=postgres;Password=1");
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }

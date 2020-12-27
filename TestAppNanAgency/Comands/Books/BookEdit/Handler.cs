@@ -6,6 +6,7 @@ using App.Storage.Repository;
 using App.WebApi.Comands.Books.Base;
 using MediatR;
 using Models;
+using TestAppNanAgency.Querys.Images;
 
 namespace App.WebApi.Comands.Books.BookEdit
 {
@@ -13,17 +14,22 @@ namespace App.WebApi.Comands.Books.BookEdit
     {
         public class Handler : BookHandler, IRequestHandler<Command, Operation>
         {
-            public Handler(GenericRepository<Book> bookRepository) : base(bookRepository)
+            public IMediator Mediator { get; }
+
+            public Handler(GenericRepository<Book> bookRepository, IMediator mediator) : base(bookRepository)
             {
+                Mediator = mediator;
             }
 
             public async Task<Operation> Handle(Command request, CancellationToken cancellationToken)
             {
+                var images = await Mediator.Send(new ImagesGetbyIds.Query(request.Images), cancellationToken);
+
                 var book = this.BookRepository.GetById(request.id);
                 book.Author = request.Author;
                 book.Price = request.Price;
                 book.Title = request.Title;
-                book.Images = request.Images.ToList();
+                book.Images = images.Value.ToList();
 
                 this.BookRepository.Update(book);
                 

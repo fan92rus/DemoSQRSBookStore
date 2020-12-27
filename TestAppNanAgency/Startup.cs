@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Storage;
+using App.Storage.Repository;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -37,15 +38,17 @@ namespace TestAppNanAgency
         {
             var asembly = typeof(Startup).Assembly;
             services.AddMediatR(asembly);
-            services.AddValidatorsFromAssembly(asembly);
+
+            //services.AddValidatorsFromAssembly(asembly);
             services.AddDbContext<AppContext>();//(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppContext>().AddRoles<IdentityRole>();
             services.AddControllers();
+            services.AddScoped<DbContext, AppContext>();
+            services.AddScoped<GenericRepository<Image>>();
+            services.AddScoped<GenericRepository<Book>>();
 
-            var mapperConfig = new MapperConfiguration(expression =>
-            {
-            });
-            
+            var mapperConfig = new MapperConfiguration(expression => { });
+
             IMapper mapper = mapperConfig.CreateMapper();
 
             services.AddSingleton(mapper);
@@ -60,13 +63,23 @@ namespace TestAppNanAgency
                 });
                 c.CustomSchemaIds(type =>
                 {
-                    if (type.FullName.EndsWith("+Command") || type.FullName.EndsWith("+Query"))
+                    if (type.FullName.EndsWith("+Query") || type.FullName.EndsWith("+Query"))
                     {
                         var parentTypeName = type.FullName.Substring(type.FullName.LastIndexOf(".", StringComparison.Ordinal) + 1);
-                        return parentTypeName.Replace("+Command", "Command").Replace("+Query", "Query");
+                        return parentTypeName.Replace("+Query", "Query").Replace("+Query", "Query");
                     }
 
-                    return type.Name;
+                    string GenGenericName(Type type)
+                    {
+                        var isGeneric = type.IsGenericType;
+                        if (isGeneric)
+                        {
+                            return type.Name + $"<{string.Join(',', type.GenericTypeArguments.Select(GenGenericName))}>";
+                        }
+                        return type.Name;
+                    }
+                    
+                    return GenGenericName(type);
                 });
             });
         }

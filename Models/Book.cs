@@ -8,8 +8,13 @@ namespace Models
     {
         public string Title { get; set; }
         public float Price { get; set; }
-        public ICollection<Uri> Images { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
         public string Author { get; set; }
     }
 
+    public class Image : Entity
+    {
+        public string Title { get; set; }
+        public Uri Uri { get; set; }
+    }
 }

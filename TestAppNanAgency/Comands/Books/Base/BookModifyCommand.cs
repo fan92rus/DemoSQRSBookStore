@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models;
 
 namespace App.WebApi.Comands.Books.Base
 {
@@ -8,6 +9,6 @@ namespace App.WebApi.Comands.Books.Base
         public string Title { get; set; }
         public float Price { get; set; }
         public string Author { get; set; }
-        public IEnumerable<Uri> Images { get; set; }
+        public IEnumerable<int> Images { get; set; }
     }
 }
